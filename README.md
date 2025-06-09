@@ -18,7 +18,7 @@ An AI agent communication system that demonstrates autonomous communication betw
 
 ```bash
 # Clone the project
-git clone [project-url]
+git clone https://github.com/ywutian/llm-agent-showcase.git
 
 # Install dependencies
 npm install
