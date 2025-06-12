@@ -1,6 +1,17 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { Brain, User, Bot, Clock, MessageSquare } from 'lucide-react';
-import { getTheme } from '../../constants';
+
+// Simple theme function
+const getTheme = (variant) => {
+  const themes = {
+    default: {
+      primary: { bg: 'from-purple-100 to-pink-100', icon: 'text-purple-600' },
+      user: { gradient: 'from-green-500 to-emerald-500' },
+      ai: { gradient: 'from-purple-500 to-pink-500' }
+    }
+  };
+  return themes[variant] || themes.default;
+};
 
 const formatTimestamp = (timestamp) => {
   return timestamp ? new Date(timestamp).toLocaleTimeString([], { 
@@ -8,6 +19,31 @@ const formatTimestamp = (timestamp) => {
     minute: '2-digit', 
     second: '2-digit' 
   }) : 'Unknown';
+};
+
+// Simple markdown parser for basic formatting
+const parseMarkdown = (text) => {
+  if (!text) return text;
+  
+  // Replace **text** with <strong>text</strong>
+  let parsed = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Replace *text* with <em>text</em>
+  parsed = parsed.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+  
+  return parsed;
+};
+
+// Component to render text with basic markdown
+const MarkdownText = ({ children, className }) => {
+  const parsedText = parseMarkdown(children);
+  
+  return (
+    <div 
+      className={className}
+      dangerouslySetInnerHTML={{ __html: parsedText }}
+    />
+  );
 };
 
 const MessageItem = React.memo(({ 
@@ -29,25 +65,53 @@ const MessageItem = React.memo(({
 
   const isUser = msg.sender === 'user';
   
+  const isGuesser = msg.currentPlayer === 'guesser' || 
+                   msg.metadata?.action === 'make_guess' ||
+                   msg.metadata?.role === 'guesser' ||
+                   msg.metadata?.phase === 'guessing' ||
+                   (msg.message && (
+                     msg.message.includes('Is it') ||
+                     msg.message.includes('My guess is') ||
+                     msg.message.includes('I guess') ||
+                     /\d+\?/.test(msg.message)
+                   ));
+  
+  const showOnRight = isUser || isGuesser;
+  
   const containerClass = useMemo(() => 
-    `flex ${isUser ? 'justify-end' : 'justify-start'} opacity-0 animate-fade-in`
-  , [isUser]);
+    `flex ${showOnRight ? 'justify-end' : 'justify-start'} opacity-0 animate-fade-in`
+  , [showOnRight]);
 
-  const messageClass = useMemo(() => 
-    `max-w-2xl px-6 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 ${
-      isUser
-        ? `bg-gradient-to-r ${theme.user.gradient} text-white`
-        : `bg-gradient-to-r ${theme.ai.gradient} text-white`
-    }`
-  , [isUser, theme.user.gradient, theme.ai.gradient]);
+  const messageClass = useMemo(() => {
+    let gradientClass;
+    if (isUser) {
+      gradientClass = theme.user.gradient;
+    } else if (isGuesser) {
+      gradientClass = 'from-blue-500 to-cyan-500';
+    } else {
+      gradientClass = theme.ai.gradient;
+    }
+    
+    return `max-w-2xl px-6 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 bg-gradient-to-r ${gradientClass} text-white`;
+  }, [isUser, isGuesser, theme.user.gradient, theme.ai.gradient]);
+
+  const getRoleInfo = useMemo(() => {
+    if (isUser) {
+      return { icon: <User className="w-4 h-4" />, name: '👤 User', color: 'text-white' };
+    } else if (isGuesser) {
+      return { icon: <div className="w-4 h-4 text-center">🔍</div>, name: '🔍 AI Guesser', color: 'text-white' };
+    } else {
+      return { icon: <div className="w-4 h-4 text-center">🎯</div>, name: '🎯 AI Hider', color: 'text-white' };
+    }
+  }, [isUser, isGuesser]);
 
   return (
     <div className={containerClass} style={messageStyle}>
       <div className={messageClass}>
         <div className="flex items-center gap-2 text-sm opacity-90 mb-2">
-          {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+          {getRoleInfo.icon}
           <span className="font-semibold">
-            {msg.metadata?.aiRole || (isUser ? '👤 User' : theme.ai.name)}
+            {getRoleInfo.name}
           </span>
           {showTimestamps && msg.timestamp && (
             <>
@@ -58,7 +122,9 @@ const MessageItem = React.memo(({
           <span className="text-xs opacity-75 ml-auto">#{index + 1}</span>
         </div>
         
-        <div className="text-lg leading-relaxed break-words">{msg.message}</div>
+        <MarkdownText className="text-lg leading-relaxed break-words">
+          {msg.message}
+        </MarkdownText>
 
         {msg.metadata && (
           <div className="mt-2 text-xs opacity-75 border-t border-white border-opacity-20 pt-2">
@@ -67,10 +133,38 @@ const MessageItem = React.memo(({
                 Guess #{msg.metadata.guessCount}
               </span>
             )}
-            {msg.metadata.confidence && (
-              <span className="bg-white bg-opacity-20 px-2 py-1 rounded">
-                Confidence: {msg.metadata.confidence}%
+           {msg.metadata.confidence && (
+  <span className="bg-white bg-opacity-20 px-2 py-1 rounded mr-2">
+    Confidence: {typeof msg.metadata.confidence === 'number' ? 
+      (msg.metadata.confidence > 1 ? 
+        msg.metadata.confidence.toFixed(1) : 
+        (msg.metadata.confidence * 100).toFixed(1)
+      ) : msg.metadata.confidence}%
+  </span>
+)}
+            {msg.metadata.action && (
+              <span className="bg-white bg-opacity-20 px-2 py-1 rounded mr-2">
+                Action: {msg.metadata.action}
               </span>
+            )}
+            {msg.metadata.phase && (
+              <span className="bg-white bg-opacity-20 px-2 py-1 rounded">
+                Phase: {msg.metadata.phase}
+              </span>
+            )}
+          </div>
+        )}
+
+        {(msg.intelligence || msg.strategy || msg.learningApplied) && (
+          <div className="mt-2 text-xs opacity-75 border-t border-white border-opacity-20 pt-2">
+            {msg.intelligence && (
+              <div className="mb-1">💡 {msg.intelligence}</div>
+            )}
+            {msg.strategy && (
+              <div className="mb-1">🎯 Strategy: {msg.strategy}</div>
+            )}
+            {msg.learningApplied && (
+              <div>📚 Learning Applied</div>
             )}
           </div>
         )}
@@ -79,18 +173,32 @@ const MessageItem = React.memo(({
   );
 });
 
-const ThinkingIndicator = React.memo(({ theme, customMessage, isGuesser = false }) => {
-  const isRightSide = isGuesser || (customMessage && customMessage.includes('🔍 AI Guesser'));
+const ThinkingIndicator = React.memo(({ theme, customMessage, isGuesser = false, currentPlayer = null }) => {
+  const shouldShowOnRight = isGuesser || 
+                           currentPlayer === 'guesser' || 
+                           (customMessage && (
+                             customMessage.includes('🔍') || 
+                             customMessage.includes('Guesser')
+                           ));
   
   const containerClass = useMemo(() => 
-    `flex ${isRightSide ? 'justify-end' : 'justify-start'}`
-  , [isRightSide]);
+    `flex ${shouldShowOnRight ? 'justify-end' : 'justify-start'}`
+  , [shouldShowOnRight]);
 
-  const indicatorClass = useMemo(() => 
-    `max-w-2xl px-6 py-4 rounded-2xl shadow-lg bg-gradient-to-r ${
-      isRightSide ? theme.user.gradient : theme.ai.gradient
-    } text-white animate-pulse`
-  , [isRightSide, theme.user.gradient, theme.ai.gradient]);
+  const indicatorClass = useMemo(() => {
+    const gradientClass = shouldShowOnRight ? 'from-blue-500 to-cyan-500' : theme.ai.gradient;
+    return `max-w-2xl px-6 py-4 rounded-2xl shadow-lg bg-gradient-to-r ${gradientClass} text-white animate-pulse`;
+  }, [shouldShowOnRight, theme.ai.gradient]);
+
+  const getThinkingMessage = useMemo(() => {
+    if (customMessage) return customMessage;
+    
+    if (shouldShowOnRight) {
+      return '🔍 AI Guesser is thinking...';
+    } else {
+      return '🎯 AI Hider is thinking...';
+    }
+  }, [customMessage, shouldShowOnRight]);
 
   return (
     <div className={containerClass}>
@@ -102,7 +210,7 @@ const ThinkingIndicator = React.memo(({ theme, customMessage, isGuesser = false 
             <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
           </div>
           <span className="text-sm font-medium">
-            {customMessage || `${theme.ai.name} is thinking...`}
+            {getThinkingMessage}
           </span>
         </div>
       </div>
@@ -118,8 +226,8 @@ const EmptyState = React.memo(() => (
   </div>
 ));
 
-const ConversationStats = React.memo(({ stats }) => (
-  <div className="flex items-center gap-4 text-sm text-gray-600">
+const ConversationStats = React.memo(({ stats, showRoleStats = false }) => (
+  <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
     <div className="flex items-center gap-1">
       <MessageSquare className="w-4 h-4" />
       <span>{stats.total}</span>
@@ -132,6 +240,18 @@ const ConversationStats = React.memo(({ stats }) => (
       <Bot className="w-4 h-4 text-purple-600" />
       <span>{stats.aiMessages}</span>
     </div>
+    {showRoleStats && (
+      <>
+        <div className="flex items-center gap-1">
+          <span className="text-blue-600">🔍</span>
+          <span>{stats.guesserMessages || 0}</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="text-purple-600">🎯</span>
+          <span>{stats.hiderMessages || 0}</span>
+        </div>
+      </>
+    )}
   </div>
 ));
 
@@ -146,6 +266,9 @@ const ConversationFooter = React.memo(({ conversation, stats }) => {
       </div>
       <div>
         {stats.total} total messages ({stats.userMessages} from you, {stats.aiMessages} from AI)
+        {stats.guesserMessages > 0 && (
+          <span> • {stats.guesserMessages} guesses, {stats.hiderMessages} hints</span>
+        )}
       </div>
     </div>
   );
@@ -159,7 +282,9 @@ const ConversationLog = ({
   thinkingMessage = null,
   currentPlayer = null,
   showTimestamps = true,
-  maxHeight = 384
+  maxHeight = 384,
+  showRoleInfo = false,
+  learningActive = false
 }) => {
   const chatContainerRef = useRef(null);
   const [isAutoScroll, setIsAutoScroll] = useState(true);
@@ -168,16 +293,7 @@ const ConversationLog = ({
 
   const theme = useMemo(() => getTheme(variant), [variant]);
   
-  const stats = useMemo(() => {
-    if (conversation.length === 0) {
-      return { userMessages: 0, aiMessages: 0, total: 0 };
-    }
-    
-    const userMessages = conversation.filter(msg => msg.sender === 'user').length;
-    const aiMessages = conversation.filter(msg => msg.sender === 'ai').length;
-    
-    return { userMessages, aiMessages, total: conversation.length };
-  }, [conversation]);
+
 
   const hasNewMessages = conversation.length > prevConversationLengthRef.current;
   const newMessagesStartIndex = prevConversationLengthRef.current;
@@ -233,23 +349,7 @@ const ConversationLog = ({
     };
   }, []);
 
-  const messageList = useMemo(() => {
-    return conversation.map((msg, index) => {
-      const key = `msg-${index}-${msg.timestamp || index}`;
-      const isNew = hasNewMessages && index >= newMessagesStartIndex;
-      
-      return (
-        <MessageItem
-          key={key}
-          msg={msg}
-          index={index}
-          theme={theme}
-          showTimestamps={showTimestamps}
-          isNew={isNew}
-        />
-      );
-    });
-  }, [conversation, theme, showTimestamps, hasNewMessages, newMessagesStartIndex]);
+
 
   const containerClass = useMemo(() => 
     `bg-gradient-to-r ${theme.primary.bg} rounded-2xl p-6 shadow-inner mb-6`
@@ -263,20 +363,74 @@ const ConversationLog = ({
     ({ maxHeight: `${maxHeight}px` })
   , [maxHeight]);
 
+  // Sample conversation data for demo
+  const sampleConversation = [
+    {
+      sender: 'ai',
+      message: 'You\'re doing brilliantly! You\'re incredibly close to the target. Stay sharp, and move **LOWER**!',
+      timestamp: Date.now() - 30000,
+      currentPlayer: 'hider'
+    },
+    {
+      sender: 'ai',
+      message: 'Is it **42**? I think this might be the *perfect* answer!',
+      timestamp: Date.now() - 15000,
+      currentPlayer: 'guesser'
+    },
+    {
+      sender: 'user',
+      message: 'This formatting test shows **bold** and *italic* text working properly.',
+      timestamp: Date.now() - 5000
+    }
+  ];
+
+  const displayConversation = conversation.length > 0 ? conversation : sampleConversation;
+
   return (
     <div className={containerClass}>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
           <Brain className={`w-7 h-7 ${theme.primary.icon}`} />
           {title}
+          {learningActive && (
+            <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-2">
+              📚 Learning Active
+            </span>
+          )}
         </h3>
         
-        {conversation.length > 0 && (
-          <ConversationStats stats={stats} />
+        {displayConversation.length > 0 && (
+          <ConversationStats 
+            stats={{
+              total: displayConversation.length,
+              userMessages: displayConversation.filter(msg => msg.sender === 'user').length,
+              aiMessages: displayConversation.filter(msg => msg.sender === 'ai').length,
+              guesserMessages: displayConversation.filter(msg => msg.currentPlayer === 'guesser').length,
+              hiderMessages: displayConversation.filter(msg => msg.currentPlayer === 'hider').length
+            }} 
+            showRoleStats={showRoleInfo} 
+          />
         )}
       </div>
 
-      {conversation.length > 3 && !isAutoScroll && (
+      {showRoleInfo && displayConversation.length > 0 && (
+        <div className="mb-4 p-3 bg-white/50 rounded-xl border border-gray-200">
+          <div className="flex items-center justify-center gap-8 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-purple-600">🎯</span>
+              <span className="text-purple-700 font-medium">AI Hider (Left)</span>
+              <span className="text-gray-500">Chooses number & gives hints</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-blue-600">🔍</span>
+              <span className="text-blue-700 font-medium">AI Guesser (Right)</span>
+              <span className="text-gray-500">Makes guesses</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {displayConversation.length > 3 && !isAutoScroll && (
         <div className="mb-4 text-center">
           <button
             onClick={scrollToLatest}
@@ -293,23 +447,44 @@ const ConversationLog = ({
         style={chatContainerStyle}
         onScroll={handleScroll}
       >
-        {conversation.length === 0 ? (
+        {displayConversation.length === 0 ? (
           <EmptyState />
         ) : (
           <>
-            {messageList}
+            {displayConversation.map((msg, index) => {
+              const key = `msg-${index}-${msg.timestamp || index}`;
+              const isNew = hasNewMessages && index >= newMessagesStartIndex;
+              
+              return (
+                <MessageItem
+                  key={key}
+                  msg={msg}
+                  index={index}
+                  theme={theme}
+                  showTimestamps={showTimestamps}
+                  isNew={isNew}
+                />
+              );
+            })}
             {isThinking && (
               <ThinkingIndicator 
                 theme={theme} 
                 customMessage={thinkingMessage}
                 isGuesser={currentPlayer === 'guesser'}
+                currentPlayer={currentPlayer}
               />
             )}
           </>
         )}
       </div>
 
-      <ConversationFooter conversation={conversation} stats={stats} />
+      <ConversationFooter conversation={displayConversation} stats={{
+        total: displayConversation.length,
+        userMessages: displayConversation.filter(msg => msg.sender === 'user').length,
+        aiMessages: displayConversation.filter(msg => msg.sender === 'ai').length,
+        guesserMessages: displayConversation.filter(msg => msg.currentPlayer === 'guesser').length,
+        hiderMessages: displayConversation.filter(msg => msg.currentPlayer === 'hider').length
+      }} />
 
       <style jsx>{`
         @keyframes fade-in {
@@ -324,18 +499,4 @@ const ConversationLog = ({
   );
 };
 
-export default React.memo(ConversationLog, (prevProps, nextProps) => {
-  return (
-    prevProps.conversation.length === nextProps.conversation.length &&
-    prevProps.variant === nextProps.variant &&
-    prevProps.title === nextProps.title &&
-    prevProps.isThinking === nextProps.isThinking &&
-    prevProps.thinkingMessage === nextProps.thinkingMessage &&
-    prevProps.currentPlayer === nextProps.currentPlayer &&
-    prevProps.showTimestamps === nextProps.showTimestamps &&
-    prevProps.maxHeight === nextProps.maxHeight &&
-    (prevProps.conversation.length === 0 || 
-     (prevProps.conversation[prevProps.conversation.length - 1] === 
-      nextProps.conversation[nextProps.conversation.length - 1]))
-  );
-});
+export default React.memo(ConversationLog);

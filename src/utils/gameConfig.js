@@ -283,15 +283,17 @@ export const createErrorResult = (error, metadata = {}) => {
 };
 
 export const createDefaultAPIConfig = () => ({
-  useRealAPI: false,
-  apiToken: "",
-  apiBaseUrl: GAME_CONFIG.API.DEFAULT_BASE_URL,
-  model: "Qwen/Qwen2.5-32B-Instruct",
-  maxTokens: GAME_CONFIG.API.DEFAULT_MAX_TOKENS,
-  temperature: GAME_CONFIG.RULES.DEFAULT_TEMPERATURE,
+  useRealAPI: true,
+  apiToken: "AIzaSyAYkZ9Kw18BTsxzwMAVCajLjxbU9OInjVQ",
+  apiBaseUrl: "https://generativelanguage.googleapis.com",
+  model: "gemini-2.5-flash-preview-05-20",
+  maxTokens: 2048,
+  temperature: 0.6,
   topP: GAME_CONFIG.API.DEFAULT_TOP_P,
   topK: GAME_CONFIG.API.DEFAULT_TOP_K,
   frequencyPenalty: GAME_CONFIG.API.DEFAULT_FREQUENCY_PENALTY,
+  provider: "gemini",
+  enhanced: true,
 });
 
 export const mergeAPIConfig = (defaultConfig, customConfig) => {
