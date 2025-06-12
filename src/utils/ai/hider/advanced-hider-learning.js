@@ -1,95 +1,89 @@
-// 高级 Hider 学习系统 - 专门设计刁钻数字的AI
 export class AdvancedHiderLearningSystem {
   constructor() {
-    // 🎯 刁钻策略数据库
+    // Tricky strategy database
     this.trickyStrategies = {
-      // 反二分搜索策略
       antiBinarySearch: {
         name: "Anti-Binary Search",
-        description: "选择让二分搜索效率最低的数字",
+        description: "Select numbers that minimize binary search efficiency",
         trickinessLevel: 0.8,
-        preferredNumbers: [7, 13, 23, 37, 43, 67, 73, 89, 97], // 质数偏好
+        preferredNumbers: [7, 13, 23, 37, 43, 67, 73, 89, 97], // Prime preference
       },
 
-      // 心理陷阱策略
       psychologicalTraps: {
         name: "Psychological Traps",
-        description: "利用人类心理偏见的数字",
+        description: "Exploit human psychological biases",
         trickinessLevel: 0.9,
         avoidPatterns: ["round_numbers", "middle_bias", "edge_preference"],
       },
 
-      // 边界陷阱策略
       boundaryTraps: {
         name: "Boundary Traps",
-        description: "在边界附近设置陷阱",
+        description: "Set traps near boundaries",
         trickinessLevel: 0.7,
         boundaryZones: [1, 2, 3, 98, 99, 100, 9, 10, 11, 89, 90, 91],
       },
 
-      // 模式破坏策略
       patternBreaker: {
         name: "Pattern Breaker",
-        description: "破坏玩家建立的策略模式",
+        description: "Disrupt player's established strategy patterns",
         trickinessLevel: 0.85,
         adaptiveSelection: true,
       },
 
-      // 极端困难策略
       ultimateChallenge: {
         name: "Ultimate Challenge",
-        description: "最高难度的刁钻数字选择",
+        description: "Maximum difficulty tricky number selection",
         trickinessLevel: 0.95,
         requiresExpertAnalysis: true,
       },
     };
 
-    // 🧠 玩家弱点数据库
+    // Player weakness exploitation database
     this.playerWeaknessDatabase = {
       binary_search_deviations: {
-        exploit: "选择让偏离标准二分搜索的数字",
+        exploit: "Select numbers that deviate from standard binary search",
         targetNumbers: [7, 13, 23, 31, 41, 59, 67, 79, 83],
       },
       round_number_bias: {
-        exploit: "避开所有5和10的倍数",
+        exploit: "Avoid all multiples of 5 and 10",
         avoidNumbers: [
           5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90,
           95, 100,
         ],
       },
       middle_preference: {
-        exploit: "选择远离40-60范围的数字",
+        exploit: "Select numbers far from 40-60 range",
         preferNumbers: [1, 7, 13, 19, 23, 73, 79, 83, 89, 97],
       },
       edge_avoidance: {
-        exploit: "选择极端边界数字",
+        exploit: "Select extreme boundary numbers",
         preferNumbers: [1, 2, 3, 4, 97, 98, 99, 100],
       },
       pattern_dependency: {
-        exploit: "打破玩家期望的数字模式",
+        exploit: "Break expected number patterns",
         requiresHistoryAnalysis: true,
       },
     };
 
-    // 📊 学习数据存储
+    // Learning data storage
     this.learningData = {
-      playerProfiles: new Map(), // 玩家档案
-      strategyEffectiveness: new Map(), // 策略有效性
-      difficultyProgression: [], // 难度递增记录
-      trickinessHistory: [], // 刁钻历史
-      gameResults: [], // 游戏结果
+      playerProfiles: new Map(),
+      strategyEffectiveness: new Map(),
+      difficultyProgression: [],
+      trickinessHistory: [],
+      gameResults: [],
     };
 
-    // ⚙️ 系统配置
+    // System configuration
     this.config = {
       maxTrickinessLevel: 0.95,
       learningRate: 0.1,
-      adaptationThreshold: 3, // 3局后开始适应
+      adaptationThreshold: 3,
       difficultyIncrement: 0.1,
       psychologicalAnalysisDepth: 5,
     };
 
-    // 📈 统计数据
+    // Statistics
     this.stats = {
       totalNumbersGenerated: 0,
       averageDifficultyInduced: 0,
@@ -99,52 +93,41 @@ export class AdvancedHiderLearningSystem {
     };
   }
 
-  // 🎯 主要方法：生成高级刁钻数字
+  // Main method: Generate advanced tricky number
   generateAdvancedTrickyNumber(gameHistory, playerProfile, contextData) {
-    console.log("🎯 Generating ADVANCED tricky number with full analysis...");
+    console.log("Generating ADVANCED tricky number with full analysis...");
 
     try {
-      // 1. 分析玩家档案
       const weaknessAnalysis = this.analyzePlayerWeaknesses(
         playerProfile,
         gameHistory
       );
-
-      // 2. 选择最佳刁钻策略
       const optimalStrategy = this.selectOptimalTrickyStrategy(
         weaknessAnalysis,
         playerProfile,
         gameHistory.length
       );
-
-      // 3. 生成候选数字
       const candidates = this.generateTrickyCandidates(
         optimalStrategy,
         weaknessAnalysis,
         playerProfile
       );
-
-      // 4. 评估和选择最终数字
       const finalSelection = this.evaluateAndSelectFinalNumber(
         candidates,
         optimalStrategy,
         weaknessAnalysis
       );
-
-      // 5. 计算预期难度
       const expectedDifficulty = this.calculateExpectedDifficulty(
         finalSelection.number,
         playerProfile,
         optimalStrategy
       );
 
-      // 6. 记录学习数据
       this.recordTrickyNumberGeneration(
         finalSelection,
         optimalStrategy,
         playerProfile
       );
-
       this.stats.totalNumbersGenerated++;
 
       return {
@@ -163,7 +146,7 @@ export class AdvancedHiderLearningSystem {
     }
   }
 
-  // 🔍 分析玩家弱点
+  // Analyze player weaknesses
   analyzePlayerWeaknesses(playerProfile, gameHistory) {
     const analysis = {
       primaryWeaknesses: [],
@@ -177,22 +160,18 @@ export class AdvancedHiderLearningSystem {
       return { ...analysis, confidenceScore: 0.3 };
     }
 
-    // 分析识别出的弱点
     if (playerProfile.identifiedWeaknesses) {
       analysis.primaryWeaknesses = playerProfile.identifiedWeaknesses;
     }
 
-    // 分析心理档案
     if (playerProfile.psychologicalProfile !== "neutral") {
       analysis.psychologicalBiases.push(playerProfile.psychologicalProfile);
     }
 
-    // 分析偏好策略
     if (playerProfile.preferredStrategies) {
       analysis.exploitablePatterns = playerProfile.preferredStrategies;
     }
 
-    // 基于技能水平调整
     const skillMultiplier =
       {
         expert: 1.2,
@@ -210,22 +189,22 @@ export class AdvancedHiderLearningSystem {
     return analysis;
   }
 
-  // 🎲 选择最佳刁钻策略
+  // Select optimal tricky strategy
   selectOptimalTrickyStrategy(weaknessAnalysis, playerProfile, gameCount) {
-    let selectedStrategy = this.trickyStrategies.antiBinarySearch; // 默认策略
+    let selectedStrategy = this.trickyStrategies.antiBinarySearch;
 
-    // 基于游戏次数递增难度
+    // Escalate difficulty based on game count
     if (gameCount < 2) {
-      selectedStrategy = this.trickyStrategies.boundaryTraps; // 温和开始
+      selectedStrategy = this.trickyStrategies.boundaryTraps;
     } else if (gameCount < 5) {
-      selectedStrategy = this.trickyStrategies.psychologicalTraps; // 心理战
+      selectedStrategy = this.trickyStrategies.psychologicalTraps;
     } else if (gameCount < 10) {
-      selectedStrategy = this.trickyStrategies.patternBreaker; // 模式破坏
+      selectedStrategy = this.trickyStrategies.patternBreaker;
     } else {
-      selectedStrategy = this.trickyStrategies.ultimateChallenge; // 终极挑战
+      selectedStrategy = this.trickyStrategies.ultimateChallenge;
     }
 
-    // 基于弱点分析调整策略
+    // Adjust strategy based on weakness analysis
     if (
       weaknessAnalysis.primaryWeaknesses.includes("imperfect_binary_search")
     ) {
@@ -240,7 +219,7 @@ export class AdvancedHiderLearningSystem {
       selectedStrategy = this.trickyStrategies.boundaryTraps;
     }
 
-    // 基于玩家技能水平调整
+    // Adjust based on player skill level
     if (playerProfile.skillLevel === "expert") {
       selectedStrategy = this.trickyStrategies.ultimateChallenge;
     } else if (playerProfile.skillLevel === "beginner") {
@@ -248,13 +227,13 @@ export class AdvancedHiderLearningSystem {
     }
 
     console.log(
-      `🎲 Selected strategy: ${selectedStrategy.name} (Level: ${selectedStrategy.trickinessLevel})`
+      `Selected strategy: ${selectedStrategy.name} (Level: ${selectedStrategy.trickinessLevel})`
     );
 
     return selectedStrategy;
   }
 
-  // 🔢 生成刁钻候选数字
+  // Generate tricky candidates
   generateTrickyCandidates(strategy, weaknessAnalysis, playerProfile) {
     const candidates = [];
 
@@ -262,23 +241,19 @@ export class AdvancedHiderLearningSystem {
       case "Anti-Binary Search":
         candidates.push(...this.generateAntiBinaryCandidates(weaknessAnalysis));
         break;
-
       case "Psychological Traps":
         candidates.push(
           ...this.generatePsychologicalTrapCandidates(playerProfile)
         );
         break;
-
       case "Boundary Traps":
         candidates.push(...this.generateBoundaryTrapCandidates());
         break;
-
       case "Pattern Breaker":
         candidates.push(
           ...this.generatePatternBreakerCandidates(playerProfile)
         );
         break;
-
       case "Ultimate Challenge":
         candidates.push(
           ...this.generateUltimateChallengeNumbers(
@@ -287,12 +262,10 @@ export class AdvancedHiderLearningSystem {
           )
         );
         break;
-
       default:
         candidates.push(...this.generateDefaultTrickyCandidates());
     }
 
-    // 确保至少有一些候选数字
     if (candidates.length === 0) {
       candidates.push(...[7, 13, 23, 37, 43, 67, 73, 89, 97]);
     }
@@ -308,28 +281,22 @@ export class AdvancedHiderLearningSystem {
     }));
   }
 
-  // 🎯 生成反二分搜索候选数字
+  // Generate anti-binary search candidates
   generateAntiBinaryCandidates(weaknessAnalysis) {
-    // 质数通常让二分搜索效率较低
     const primes = [
       7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79,
       83, 89, 97,
     ];
-
-    // 选择位置较刁钻的质数
-    const trickyPrimes = primes.filter((p) => {
-      // 避开太明显的中点
-      return p !== 50 && Math.abs(p - 50) > 10;
-    });
-
-    return trickyPrimes.slice(0, 8); // 返回前8个
+    const trickyPrimes = primes.filter(
+      (p) => p !== 50 && Math.abs(p - 50) > 10
+    );
+    return trickyPrimes.slice(0, 8);
   }
 
-  // 🧠 生成心理陷阱候选数字
+  // Generate psychological trap candidates
   generatePsychologicalTrapCandidates(playerProfile) {
     const candidates = [];
 
-    // 如果玩家避免圆整数，故意选择看起来不像圆整数的数字
     if (playerProfile.psychologicalProfile === "round_number_preference") {
       candidates.push(
         ...[
@@ -339,17 +306,14 @@ export class AdvancedHiderLearningSystem {
       );
     }
 
-    // 如果玩家偏好中间数字，选择边缘数字
     if (playerProfile.psychologicalProfile === "middle_bias") {
       candidates.push(...[3, 7, 11, 13, 17, 19, 83, 87, 89, 91, 93, 97]);
     }
 
-    // 如果玩家避开边界，选择边界数字
     if (playerProfile.psychologicalProfile === "edge_avoidance") {
       candidates.push(...[1, 2, 3, 4, 5, 96, 97, 98, 99, 100]);
     }
 
-    // 如果没有明确偏好，选择反直觉的数字
     if (candidates.length === 0) {
       candidates.push(...[7, 13, 23, 31, 41, 59, 67, 79, 83, 89]);
     }
@@ -357,7 +321,7 @@ export class AdvancedHiderLearningSystem {
     return candidates;
   }
 
-  // 🎲 生成边界陷阱候选数字
+  // Generate boundary trap candidates
   generateBoundaryTrapCandidates() {
     return [
       1, 2, 3, 4, 5, 6, 94, 95, 96, 97, 98, 99, 100, 8, 9, 10, 11, 88, 89, 90,
@@ -365,23 +329,18 @@ export class AdvancedHiderLearningSystem {
     ];
   }
 
-  // 🔀 生成模式破坏候选数字
+  // Generate pattern breaker candidates
   generatePatternBreakerCandidates(playerProfile) {
-    // 分析玩家的历史偏好，选择相反的数字
     const candidates = [];
 
-    // 基于偏好策略选择相反的模式
     if (playerProfile.preferredStrategies?.includes("pure_binary_search")) {
-      // 选择让纯二分搜索低效的数字
       candidates.push(...[7, 13, 23, 37, 43, 67, 73, 89, 97]);
     }
 
     if (playerProfile.preferredStrategies?.includes("pattern_seeking")) {
-      // 选择无规律的数字
       candidates.push(...[11, 17, 29, 41, 53, 71, 83, 91]);
     }
 
-    // 确保有候选数字
     if (candidates.length === 0) {
       candidates.push(...[13, 17, 31, 37, 41, 71, 73, 79]);
     }
@@ -389,25 +348,10 @@ export class AdvancedHiderLearningSystem {
     return candidates;
   }
 
-  // 💀 生成终极挑战数字
+  // Generate ultimate challenge numbers
   generateUltimateChallengeNumbers(weaknessAnalysis, playerProfile) {
-    // 这些是经过精心计算的最难猜测的数字
-    const ultimateNumbers = [
-      7, // 小质数，破坏二分搜索
-      13, // 不吉利数字，心理影响
-      23, // 中小质数
-      31, // 稍大质数
-      41, // 接近中间但不是
-      59, // 大质数
-      67, // 2/3位置质数
-      73, // 3/4位置质数
-      79, // 接近80但不是
-      83, // 大质数
-      89, // 接近90但不是
-      97, // 最大两位质数
-    ];
+    const ultimateNumbers = [7, 13, 23, 31, 41, 59, 67, 73, 79, 83, 89, 97];
 
-    // 基于玩家弱点选择最刁钻的
     if (weaknessAnalysis.confidenceScore > 0.8) {
       return ultimateNumbers.filter((n) => n % 10 !== 0 && n % 5 !== 0);
     }
@@ -415,32 +359,28 @@ export class AdvancedHiderLearningSystem {
     return ultimateNumbers.slice(0, 6);
   }
 
-  // 🎯 生成默认刁钻候选数字
+  // Generate default tricky candidates
   generateDefaultTrickyCandidates() {
     return [7, 13, 23, 37, 43, 67, 73, 89, 97];
   }
 
-  // 📊 计算刁钻分数
+  // Calculate trickiness score
   calculateTrickinessScore(number, strategy, weaknessAnalysis) {
     let score = strategy.trickinessLevel;
 
-    // 质数加分
     if (this.isPrime(number)) {
       score += 0.1;
     }
 
-    // 远离50加分
     const distanceFrom50 = Math.abs(number - 50);
     if (distanceFrom50 > 20) {
       score += 0.05;
     }
 
-    // 不是5或10的倍数加分
     if (number % 5 !== 0 && number % 10 !== 0) {
       score += 0.05;
     }
 
-    // 基于玩家弱点调整
     if (weaknessAnalysis.confidenceScore > 0.7) {
       score += 0.1;
     }
@@ -448,7 +388,7 @@ export class AdvancedHiderLearningSystem {
     return Math.min(1.0, score);
   }
 
-  // 🏆 评估和选择最终数字
+  // Evaluate and select final number
   evaluateAndSelectFinalNumber(candidates, strategy, weaknessAnalysis) {
     if (candidates.length === 0) {
       return {
@@ -461,9 +401,7 @@ export class AdvancedHiderLearningSystem {
       };
     }
 
-    // 按刁钻分数排序
     candidates.sort((a, b) => b.trickinessScore - a.trickinessScore);
-
     const topCandidate = candidates[0];
 
     return {
@@ -485,7 +423,7 @@ export class AdvancedHiderLearningSystem {
     };
   }
 
-  // 🎭 描述心理陷阱
+  // Describe psychological trap
   describePsychologicalTrap(number, strategy) {
     const traps = {
       "Anti-Binary Search": `Number ${number} maximizes binary search inefficiency`,
@@ -498,7 +436,7 @@ export class AdvancedHiderLearningSystem {
     return traps[strategy.name] || `Strategic selection: ${number}`;
   }
 
-  // 💡 生成学习洞察
+  // Generate learning insight
   generateLearningInsight(candidate, weaknessAnalysis) {
     if (weaknessAnalysis.confidenceScore < 0.5) {
       return "Limited player data - using general difficulty principles";
@@ -521,7 +459,7 @@ export class AdvancedHiderLearningSystem {
     )} trickiness score`;
   }
 
-  // 🎯 识别目标弱点
+  // Identify targeted weaknesses
   identifyTargetedWeaknesses(number, weaknessAnalysis) {
     const targeted = [];
 
@@ -544,15 +482,13 @@ export class AdvancedHiderLearningSystem {
     return targeted;
   }
 
-  // 📈 计算预期难度
+  // Calculate expected difficulty
   calculateExpectedDifficulty(number, playerProfile, strategy) {
-    const baseGuesses = 7; // 理论二分搜索次数
+    const baseGuesses = 7;
     let difficultyMultiplier = 1.0;
 
-    // 基于策略调整
     difficultyMultiplier += strategy.trickinessLevel * 0.5;
 
-    // 基于玩家技能调整
     const skillAdjustment =
       {
         expert: 0.8,
@@ -564,7 +500,6 @@ export class AdvancedHiderLearningSystem {
 
     difficultyMultiplier *= skillAdjustment;
 
-    // 基于数字特性调整
     if (this.isPrime(number)) {
       difficultyMultiplier += 0.2;
     }
@@ -574,10 +509,10 @@ export class AdvancedHiderLearningSystem {
     }
 
     const expectedGuesses = Math.round(baseGuesses * difficultyMultiplier);
-    return Math.max(6, Math.min(15, expectedGuesses)); // 限制在合理范围内
+    return Math.max(6, Math.min(15, expectedGuesses));
   }
 
-  // 📝 记录刁钻数字生成
+  // Record tricky number generation
   recordTrickyNumberGeneration(selection, strategy, playerProfile) {
     const record = {
       timestamp: Date.now(),
@@ -590,15 +525,14 @@ export class AdvancedHiderLearningSystem {
 
     this.learningData.trickinessHistory.push(record);
 
-    // 保持历史记录不超过100条
     if (this.learningData.trickinessHistory.length > 100) {
       this.learningData.trickinessHistory.shift();
     }
   }
 
-  // 🔄 从游戏结果中学习
+  // Learn from game result
   learnFromGameResult(gameResult, secretNumber, conversationHistory) {
-    console.log("🎯 Hider learning from game result:", gameResult);
+    console.log("Hider learning from game result:", gameResult);
 
     try {
       const learningRecord = {
@@ -607,31 +541,25 @@ export class AdvancedHiderLearningSystem {
         actualGuesses: gameResult.guessCount,
         expectedGuesses: gameResult.expectedGuesses || 7,
         strategy: gameResult.strategy,
-        success: gameResult.guessCount >= 8, // 8次以上算成功的刁钻
+        success: gameResult.guessCount >= 8,
         playerGuessHistory: gameResult.guessHistory || [],
       };
 
       this.learningData.gameResults.push(learningRecord);
-
-      // 更新策略有效性
       this.updateStrategyEffectiveness(
         gameResult.strategy,
         learningRecord.success
       );
-
-      // 更新平均难度
       this.updateAverageDifficulty(gameResult.guessCount);
-
-      // 分析玩家的应对方式
       this.analyzePlayerResponse(gameResult.guessHistory, secretNumber);
 
-      console.log("✅ Hider learning completed");
+      console.log("Hider learning completed");
     } catch (error) {
       console.warn("Hider learning failed:", error.message);
     }
   }
 
-  // 📊 更新策略有效性
+  // Update strategy effectiveness
   updateStrategyEffectiveness(strategy, wasSuccessful) {
     if (!this.stats.strategySuccessRates.has(strategy)) {
       this.stats.strategySuccessRates.set(strategy, { success: 0, total: 0 });
@@ -644,11 +572,11 @@ export class AdvancedHiderLearningSystem {
     }
 
     console.log(
-      `📊 Strategy ${strategy}: ${stats.success}/${stats.total} success rate`
+      `Strategy ${strategy}: ${stats.success}/${stats.total} success rate`
     );
   }
 
-  // 📈 更新平均难度
+  // Update average difficulty
   updateAverageDifficulty(actualGuesses) {
     const totalGames = this.stats.totalNumbersGenerated;
     this.stats.averageDifficultyInduced =
@@ -656,7 +584,7 @@ export class AdvancedHiderLearningSystem {
       totalGames;
   }
 
-  // 🔍 分析玩家应对方式
+  // Analyze player response
   analyzePlayerResponse(guessHistory, secretNumber) {
     if (!guessHistory || guessHistory.length === 0) return;
 
@@ -670,29 +598,25 @@ export class AdvancedHiderLearningSystem {
       efficiencyScore: this.calculateEfficiencyScore(guessHistory.length),
     };
 
-    // 存储分析结果用于未来改进
     this.learningData.gameResults[
       this.learningData.gameResults.length - 1
     ].playerAnalysis = analysis;
   }
 
-  // 🔍 检测二分搜索使用
+  // Detect binary search usage
   detectBinarySearchUsage(guesses, secret) {
     if (guesses.length <= 2) return true;
 
-    // 简化检测：检查是否大致遵循二分搜索模式
     let range = { min: 1, max: 100 };
     let binaryLikeSteps = 0;
 
     for (const guess of guesses.slice(0, -1)) {
-      // 除了最后一次
       const expectedMidpoint = Math.floor((range.min + range.max) / 2);
 
       if (Math.abs(guess - expectedMidpoint) <= 3) {
         binaryLikeSteps++;
       }
 
-      // 更新范围
       if (guess < secret) {
         range.min = guess + 1;
       } else {
@@ -703,13 +627,13 @@ export class AdvancedHiderLearningSystem {
     return binaryLikeSteps / (guesses.length - 1) > 0.6;
   }
 
-  // 🧠 检测心理偏见
+  // Detect psychological bias
   detectPsychologicalBias(guesses) {
     const roundNumbers = guesses.filter((g) => g % 5 === 0 || g % 10 === 0);
     return roundNumbers.length / guesses.length > 0.3;
   }
 
-  // 🔄 检测模式寻求
+  // Detect pattern seeking
   detectPatternSeeking(guesses) {
     if (guesses.length < 3) return false;
 
@@ -723,13 +647,13 @@ export class AdvancedHiderLearningSystem {
     return consecutiveSmallSteps > guesses.length * 0.3;
   }
 
-  // 📊 计算效率分数
+  // Calculate efficiency score
   calculateEfficiencyScore(guessCount) {
-    const optimal = Math.ceil(Math.log2(100)); // ~7
+    const optimal = Math.ceil(Math.log2(100));
     return Math.max(0, 1 - (guessCount - optimal) / 10);
   }
 
-  // 🔄 生成回退刁钻数字
+  // Generate fallback tricky number
   generateFallbackTrickyNumber(playerProfile) {
     const fallbackNumbers = [7, 13, 23, 37, 43, 67, 73, 89, 97];
     const selectedNumber =
@@ -747,7 +671,7 @@ export class AdvancedHiderLearningSystem {
     };
   }
 
-  // 📊 获取学习统计
+  // Get learning statistics
   getLearningStats() {
     const recentGames = this.learningData.gameResults.slice(-10);
 
@@ -764,7 +688,7 @@ export class AdvancedHiderLearningSystem {
     };
   }
 
-  // 📈 计算整体刁钻水平
+  // Calculate overall trickiness level
   calculateOverallTrickinessLevel() {
     if (this.learningData.trickinessHistory.length === 0) return 0.5;
 
@@ -777,7 +701,7 @@ export class AdvancedHiderLearningSystem {
     return avgTrickiness.toFixed(2);
   }
 
-  // 📊 获取策略成功率
+  // Get strategy success rates
   getStrategySuccessRates() {
     const rates = {};
     for (const [strategy, stats] of this.stats.strategySuccessRates) {
@@ -789,14 +713,13 @@ export class AdvancedHiderLearningSystem {
     return rates;
   }
 
-  // 📈 分析近期表现
+  // Analyze recent performance
   analyzeRecentPerformance(recentGames) {
     if (recentGames.length === 0) return "No recent data";
 
     const avgRecentGuesses =
       recentGames.reduce((sum, game) => sum + game.actualGuesses, 0) /
       recentGames.length;
-
     const successfulTricks = recentGames.filter((game) => game.success).length;
 
     return {
@@ -809,9 +732,8 @@ export class AdvancedHiderLearningSystem {
     };
   }
 
-  // 🔄 重置系统
+  // Reset system
   reset() {
-    // 保留学习数据但重置游戏特定状态
     this.stats = {
       totalNumbersGenerated: 0,
       averageDifficultyInduced: 0,
@@ -821,11 +743,11 @@ export class AdvancedHiderLearningSystem {
     };
 
     console.log(
-      "🔄 Advanced Hider Learning System reset (learning data preserved)"
+      "Advanced Hider Learning System reset (learning data preserved)"
     );
   }
 
-  // 🧮 辅助方法：检查质数
+  // Helper method: Check if prime
   isPrime(n) {
     if (n < 2) return false;
     if (n === 2) return true;

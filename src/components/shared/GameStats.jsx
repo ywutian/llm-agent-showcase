@@ -1,9 +1,8 @@
-// components/shared/GameStats.jsx - 简化版本，移除turns和efficiency
 import React, { useMemo } from 'react';
 import { Brain, MessageCircle, Cpu, Zap, Target, Activity } from 'lucide-react';
 import { getTheme } from '../../constants';
 
-// 默认主题配置 - 防止 getTheme 返回 undefined
+// Default theme configuration
 const DEFAULT_THEME = {
   primary: { bg: 'from-gray-100 to-gray-200', icon: 'text-gray-600', text: 'text-gray-700' },
   role: { bg: 'from-gray-100 to-gray-200', icon: 'text-gray-600', text: 'text-gray-700' },
@@ -11,7 +10,7 @@ const DEFAULT_THEME = {
   user: { bg: 'from-green-100 to-green-200', icon: 'text-green-600', text: 'text-green-700' }
 };
 
-// 安全的主题获取函数
+// Safe theme getter
 const getSafeTheme = (variant) => {
   try {
     const theme = getTheme(variant);
@@ -39,10 +38,9 @@ const GameStats = ({
   gameState = 'idle', 
   variant = 'default'
 }) => {
-  // 使用安全的主题获取
   const theme = useMemo(() => getSafeTheme(variant), [variant]);
   
-  // 安全的统计数据计算
+  // Safe stats calculation
   const stats = useMemo(() => {
     const safeGameData = gameData || {};
     const safeConversation = Array.isArray(conversation) ? conversation : [];
@@ -65,7 +63,7 @@ const GameStats = ({
     };
 
     if (variant === 'v3') {
-      // V3 自对弈模式 - 简化版
+      // V3 self-play mode
       return [
         {
           key: 'mode',
@@ -93,7 +91,7 @@ const GameStats = ({
         }
       ];
     } else {
-      // 默认模式 - 简化版
+      // Default mode
       return [
         {
           key: 'role',
@@ -133,7 +131,7 @@ const GameStats = ({
 
   const gridClass = useMemo(() => getGridClass(statsConfig.length), [statsConfig.length]);
 
-  // 空状态检查
+  // Empty state check
   if (!gameData && (!conversation || conversation.length === 0)) {
     return (
       <div className="text-center py-8 text-gray-500">
@@ -160,18 +158,15 @@ const GameStats = ({
             title={stat.tooltip}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            {/* Icon */}
             <stat.icon className={`w-10 h-10 mx-auto mb-3 ${safeIcon} group-hover:scale-110 transition-transform duration-200`} />
             
-            {/* Label */}
             <div className="text-base text-gray-600 mb-2 font-medium">{stat.label}</div>
             
-            {/* Value */}
             <div className={`text-xl font-bold ${safeText} group-hover:scale-105 transition-transform duration-200`}>
               {stat.value}
             </div>
 
-            {/* Special indicators */}
+            {/* Status indicators */}
             {stat.key === 'mode' && stat.value === 'Real API' && (
               <div className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse" title="Real API Active"></div>
             )}
