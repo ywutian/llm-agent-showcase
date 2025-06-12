@@ -43,6 +43,7 @@ const LLMSelfPlaySystemV3 = () => {
   const [apiError, setApiError] = useState(null);
   const [expandedApiData, setExpandedApiData] = useState(null);
   const [systemActivity, setSystemActivity] = useState('idle');
+  const [showProjectInfo, setShowProjectInfo] = useState(false);
 
   const {
     startRealTimeGame,
@@ -302,6 +303,183 @@ const LLMSelfPlaySystemV3 = () => {
 
   const hasValidConfidence = (value) => value !== null && value !== undefined && !isNaN(value);
 
+  const renderProjectInfoModal = () => (
+    showProjectInfo && (
+      <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-3xl shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                  <Brain className="w-8 h-8" />
+                  Intelligent Number Guessing Game System
+                </h2>
+                <p className="text-lg text-indigo-100">LLM-based Bidirectional Adaptive Learning AI System</p>
+              </div>
+              <button
+                onClick={() => setShowProjectInfo(false)}
+                className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-all"
+              >
+                <X className="w-8 h-8" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="space-y-8">
+              
+              {/* Project Overview */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
+                <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Zap className="w-6 h-6 text-blue-600" />
+                  Project Overview
+                </h3>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  An intelligent number guessing game system based on Large Language Models (LLM), featuring <strong className="text-blue-700">dual AI autonomous competition</strong> and <strong className="text-blue-700">continuous learning evolution</strong>. 
+                  The system demonstrates AI capabilities in strategic planning, opponent modeling, and adaptive learning through human-like game behavior simulation.
+                </p>
+              </div>
+
+              {/* AI Roles Introduction */}
+              <div className="grid md:grid-cols-2 gap-6">
+                
+                {/* Hider Role */}
+                <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-2xl p-6 border border-red-200">
+                  <h3 className="text-xl font-bold text-red-800 mb-4 flex items-center gap-2">
+                    🎯 Hider (Number Setter)
+                  </h3>
+                  <div className="space-y-3 text-gray-700">
+                    <p><strong>Core Capabilities:</strong></p>
+                    <ul className="space-y-2 ml-4">
+                      <li>• <strong>Strategic Number Selection:</strong> Choose challenging numbers based on opponent behavior patterns</li>
+                      <li>• <strong>Player Profiling:</strong> Analyze guesser's strategy preferences and psychological traits</li>
+                      <li>• <strong>Adaptive Difficulty:</strong> Dynamically adjust challenge level based on historical performance</li>
+                      <li>• <strong>Strategy Evolution:</strong> Learn from each game to optimize questioning strategies</li>
+                    </ul>
+                    <div className="bg-red-100 p-3 rounded-lg mt-4">
+                      <p className="text-sm text-red-700">
+                        <strong>Verbose Design:</strong> The Hider is intentionally designed to be "chatty" and expressive, providing rich linguistic feedback. This verbose communication style allows the Guesser to learn the Hider's questioning patterns, personality traits, and strategic tendencies through natural language processing.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Guesser Role */}
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+                  <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center gap-2">
+                    🔍 Guesser (Number Finder)
+                  </h3>
+                  <div className="space-y-3 text-gray-700">
+                    <p><strong>Core Capabilities:</strong></p>
+                    <ul className="space-y-2 ml-4">
+                      <li>• <strong>Multi-Strategy Guessing:</strong> Binary search, adaptive exploration, creative approaches</li>
+                      <li>• <strong>Linguistic Analysis:</strong> Deep understanding of Hider's verbal cues and semantic hints</li>
+                      <li>• <strong>Pattern Recognition:</strong> Extract successful patterns and learn from failures</li>
+                      <li>• <strong>Confidence Calibration:</strong> Real-time assessment of guess confidence and success probability</li>
+                    </ul>
+                    <div className="bg-green-100 p-3 rounded-lg mt-4">
+                      <p className="text-sm text-green-700">
+                        <strong>Learning Mechanism:</strong> By analyzing the Hider's verbose feedback, language patterns, and behavioral characteristics, the Guesser continuously optimizes its guessing strategies and develops a deeper understanding of the Hider's communication style.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Technical Features */}
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-200">
+                <h3 className="text-2xl font-bold text-purple-800 mb-4 flex items-center gap-2">
+                  <Activity className="w-6 h-6" />
+                  Technical Features & Innovation
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-purple-700 mb-3">🧠 Deep Learning Mechanisms</h4>
+                    <ul className="space-y-2 text-gray-700">
+                      <li>• <strong>Cumulative Memory System:</strong> Cross-game continuous learning and knowledge accumulation</li>
+                      <li>• <strong>Metacognitive Abilities:</strong> AI self-reflection and strategy adjustment</li>
+                      <li>• <strong>Opponent Modeling:</strong> Real-time construction and updating of opponent behavior models</li>
+                      <li>• <strong>Creative Strategy Generation:</strong> Innovative thinking when conventional methods fail</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-purple-700 mb-3">⚡ System Optimization</h4>
+                    <ul className="space-y-2 text-gray-700">
+                      <li>• <strong>Intelligent API Scheduling:</strong> Multi-token rotation ensuring service stability</li>
+                      <li>• <strong>Real-time Performance Monitoring:</strong> Detailed debugging and performance metrics</li>
+                      <li>• <strong>Adaptive Complexity:</strong> AI thinking depth adjustment based on game phases</li>
+                      <li>• <strong>Fault Tolerance & Recovery:</strong> Intelligent degradation and error handling</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bidirectional Learning Evolution */}
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200">
+                <h3 className="text-2xl font-bold text-amber-800 mb-4 flex items-center gap-2">
+                  <BookOpen className="w-6 h-6" />
+                  Bidirectional Learning Evolution Process
+                </h3>
+                <div className="space-y-4">
+                  <div className="bg-white p-4 rounded-xl border border-amber-200">
+                    <h4 className="font-semibold text-amber-700 mb-2">🔄 Dynamic Adversarial Learning</h4>
+                    <p className="text-gray-700">Two AI roles evolve through competition: Hider learns to pose more challenging questions, while Guesser develops more efficient guessing strategies. This competitive learning drives spiral improvement in both agents' capabilities.</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl border border-amber-200">
+                    <h4 className="font-semibold text-amber-700 mb-2">📊 Data-Driven Optimization</h4>
+                    <p className="text-gray-700">The system records detailed interaction data including strategy selection, success rates, confidence levels, and continuously optimizes AI decision models and behavioral strategies through statistical analysis.</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl border border-amber-200">
+                    <h4 className="font-semibold text-amber-700 mb-2">🎯 Personalized Adaptation</h4>
+                    <p className="text-gray-700">AI adapts behavior patterns to different opponent characteristics, achieving truly personalized intelligent interaction and demonstrating human-like adaptability and learning capabilities.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Application Value */}
+              <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl p-6 border border-teal-200">
+                <h3 className="text-2xl font-bold text-teal-800 mb-4 flex items-center gap-2">
+                  🚀 Application Value & Significance
+                </h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-white p-4 rounded-xl border border-teal-200">
+                    <h4 className="font-semibold text-teal-700 mb-2">🔬 AI Research</h4>
+                    <p className="text-sm text-gray-700">Demonstrates LLM potential in complex strategic games, providing practical cases for AI autonomous learning and decision optimization.</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl border border-teal-200">
+                    <h4 className="font-semibold text-teal-700 mb-2">🎮 Game AI</h4>
+                    <p className="text-sm text-gray-700">Provides intelligent NPC design insights for the gaming industry, creating more challenging and adaptive gaming experiences.</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl border border-teal-200">
+                    <h4 className="font-semibold text-teal-700 mb-2">📚 Education & Training</h4>
+                    <p className="text-sm text-gray-700">Applicable to personalized teaching systems, dynamically adjusting question difficulty and teaching strategies based on learner characteristics.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          
+          <div className="p-6 bg-gray-50 border-t border-gray-200">
+            <div className="flex justify-between items-center">
+              <div className="text-sm text-gray-600">
+                <p>🔧 <strong>Tech Stack:</strong> React + Google Gemini API + Custom Learning Algorithms</p>
+                <p>📈 <strong>Features:</strong> Real-time Learning | Multi-Strategy Gaming | Intelligent Adaptation | Performance Monitoring</p>
+                <p>🛠️ <strong>Developer Mode:</strong> Open browser DevTools (F12) to view detailed console outputs, API responses, and system analysis logs</p>
+              </div>
+              <button
+                onClick={() => setShowProjectInfo(false)}
+                className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all transform hover:scale-105 shadow-lg"
+              >
+                Start Experience
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  );
+
   const renderApiConfig = () => (
     showApiConfig && (
       <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 shadow-lg">
@@ -444,6 +622,13 @@ const LLMSelfPlaySystemV3 = () => {
                 Status: {systemActivity}
               </span>
             </div>
+            <button
+              onClick={() => setShowProjectInfo(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:from-cyan-600 hover:to-blue-600 transition-all transform hover:scale-105 shadow-md text-sm"
+            >
+              <BookOpen className="w-4 h-4" />
+              Project Info
+            </button>
           </div>
           <p className="text-xl text-gray-600">
             LLM Intelligence: Deep conversation analysis + Cumulative learning memory + Role perception intelligence + Confidence tracking + Multi-API failover
@@ -493,6 +678,8 @@ const LLMSelfPlaySystemV3 = () => {
         )}
 
         {renderApiConfig()}
+
+        {renderProjectInfoModal()}
 
         {showDebugPanel && (
           <div className="mb-6 p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border border-gray-200 shadow-lg">
